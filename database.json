@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "member@gmail.com",
+      "password": "123@#",
+      "type": "google",
+      "role": 1
+    },
+    {
+      "id": "2",
+      "email": "admin@fpt.edu.vn",
+      "password": "abc@#",
+      "type": "system",
+      "role": 2
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Electronic"
+    },
+    {
+      "id": "2",
+      "name": "Computer"
+    },
+    {
+      "id": "3",
+      "name": "Smartphone"
+    },
+    {
+      "id": "4",
+      "name": "Laptop"
+    }
+  ],
+  "products": [
+    {
+      "name": "asus game ming",
+      "price": 20000000,
+      "description": "abc",
+      "category": "2",
+      "id": "34e9"
+    },
+    {
+      "name": "fx 570",
+      "price": 20000,
+      "description": "ssss",
+      "category": "2",
+      "id": "ab1c"
+    }
+  ]
+}
