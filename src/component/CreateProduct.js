@@ -98,7 +98,7 @@ export default function CreateProduct() {
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Category</Form.Label>
-                        <Form.Select onChange={e => setCatId(e.target.value)}>
+                        <Form.Select onChange={e => setCatId(parseInt(e.target.value))}>
                             <option value="0">-- Select a category</option>
                             {categories?.map(c => (
                                 <option value={c.id} key={c.id}>{c.name}</option>

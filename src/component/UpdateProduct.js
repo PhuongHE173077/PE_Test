@@ -50,6 +50,11 @@ function UpdateProduct() {
 
 
     }
+    const sortedCategories = [...categories].sort((a, b) => {
+        if (a.id === product.category) return -1;
+        if (b.id === product.category) return 1;
+        return 0;
+    });
     return (
         <Container>
             <Row>
@@ -84,8 +89,8 @@ function UpdateProduct() {
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Category</Form.Label>
-                        <Form.Select defaultValue={product.category} onChange={e => setCatId(e.target.value)}>
-                            {categories?.map(c => (
+                        <Form.Select defaultValue={product.category} onChange={e => setCatId(parseInt(e.target.value))}>
+                            {sortedCategories.map(c => (
                                 <option value={c.id} key={c.id}>{c.name}</option>
                             ))}
                         </Form.Select>

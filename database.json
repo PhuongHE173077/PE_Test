@@ -17,36 +17,63 @@
   ],
   "categories": [
     {
-      "id": "1",
+      "id": 1,
       "name": "Electronic"
     },
     {
-      "id": "2",
+      "id": 2,
       "name": "Computer"
     },
     {
-      "id": "3",
+      "id": 3,
       "name": "Smartphone"
     },
     {
-      "id": "4",
+      "id": 4,
       "name": "Laptop"
     }
   ],
   "products": [
     {
-      "name": "asus game ming",
-      "price": 20000000,
-      "description": "abc",
-      "category": "2",
-      "id": "34e9"
+      "id": "1",
+      "name": "Android TV 90 inch",
+      "price": 10000000,
+      "description": "",
+      "category": 1,
+      "brands": [
+        {
+          "id": 1,
+          "name": "Samsung"
+        },
+        {
+          "id": 2,
+          "name": "LG"
+        }
+      ]
     },
     {
-      "name": "fx 570",
-      "price": 20000,
-      "description": "ssss",
-      "category": "2",
-      "id": "ab1c"
+      "name": "Camera 360 IP",
+      "price": 1500000,
+      "description": "đâsdasd",
+      "category": 3,
+      "brands": [
+        {
+          "id": 3,
+          "name": "XaoMi"
+        },
+        {
+          "id": 4,
+          "name": "Apple"
+        }
+      ],
+      "id": "2"
+    },
+    {
+      "name": "ss",
+      "price": 200000,
+      "description": "ss",
+      "category": 2,
+      "id": "a87d"
     }
   ]
 }

@@ -1,57 +1,69 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Col, Container, Form, FormCheck, Row, Table } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 export default function Product() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [selectedBrands, setSelectedBrands] = useState([]);
     const [search, setSearch] = useState("");
-    const [catId, setCatId] = useState("all");
+    const [catId, setCatId] = useState(0);
     const [money, setMoney] = useState(0);
-
     useEffect(() => {
-        // GET - URI: http://localhost:9999/products
         fetch("http://localhost:9999/products")
             .then(res => res.json())
             .then(result => {
-                if (catId !== "all") {
-                    if (money > 0) {
-                        if (search.length > 0)
-                            setProducts(result.filter(p => p.category === catId && p.name.toLowerCase().includes(search.toLowerCase()) && p.price >= money))
-                        else
-                            setProducts(result.filter(p => p.category === catId && p.price >= money))
-                    } else {
-                        if (search.length > 0)
-                            setProducts(result.filter(p => p.category === catId && p.name.toLowerCase().includes(search.toLowerCase())))
-                        else
-                            setProducts(result.filter(p => p.category === catId))
-                    }
 
-                }
-                else {
-                    if (money > 0) {
-                        if (search.length > 0)
-                            setProducts(result.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) && p.price >= money))
-                        else
-                            setProducts(result.filter(p => p.price >= money))
-                    } else {
-                        if (search.length > 0)
-                            setProducts(result.filter(p => p.name.toLowerCase().includes(search.toLowerCase())))
-                        else
-                            setProducts(result)
+                const allBrands = [];
+                result.forEach(product => {
+                    if (product.brands && Array.isArray(product.brands)) {
+                        product.brands.forEach((brand) => {
+                            if (!allBrands.some(b => b.id === brand.id)) {
+                                allBrands.push(brand);
+                            }
+                        });
                     }
-                }
+                });
+                setBrands(allBrands);
 
             })
-            .catch(error => console.log(error));
+    }, []);
 
-        // GET - URI: http://localhost:9999/categories
+    useEffect(() => {
+        fetch("http://localhost:9999/products")
+            .then(res => res.json())
+            .then(result => {
+                let productFilter = result;
+                if (catId !== 0) {
+                    productFilter = productFilter.filter(p => p.category === parseInt(catId));
+                }
+                if (search.length > 0) {
+                    productFilter = productFilter.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+                }
+                if (selectedBrands.length > 0) {
+                    productFilter = productFilter.filter(p =>
+                        selectedBrands.every(sb => p.brands && p.brands.some(pb => pb.id === sb.id))
+                    );
+                }
+                productFilter = productFilter.filter(p => p.price >= money);
+                setProducts(productFilter);
+            })
+
         fetch("http://localhost:9999/categories")
             .then(res => res.json())
             .then(result => setCategories(result))
             .catch(error => console.log(error));
 
-    }, [catId, search, money]);
+    }, [catId, search, money, selectedBrands]);
+
+    const handleBrandChange = (brand) => {
+        if (selectedBrands.some((brains) => brains.id === brand.id)) {
+            setSelectedBrands(prev => prev.filter(br => br.id !== brand.id))
+        } else {
+            setSelectedBrands(prev => [...prev, brand])
+        }
+    };
 
     //handle delete action
     function handleDelete(id) {
@@ -78,8 +90,8 @@ export default function Product() {
                         </Row>
                         <Row>
                             <Col>
-                                <Form.Select onChange={e => setCatId(e.target.value)}>
-                                    <option value="all" key={0}>-- All --</option>
+                                <Form.Select onChange={e => setCatId(parseInt(e.target.value))}>
+                                    <option value={0} key={0}>-- All --</option>
                                     {
                                         categories?.map(c => (
                                             <option value={c.id} key={c.id}>{c.name}</option>
@@ -103,7 +115,17 @@ export default function Product() {
                         <Row><Col><h5>By Brands</h5></Col>
                         </Row>
                         <Row>
-                            <Col></Col>
+                            {
+                                brands?.map(brand => (
+                                    <Form.Check
+                                        key={brand.id}
+                                        type="checkbox"
+                                        label={brand.name}
+                                        onChange={() => handleBrandChange(brand)}
+                                        checked={selectedBrands.includes(brand)}
+                                    />
+                                ))
+                            }
                         </Row>
                     </Container>
                 </Col>
@@ -149,8 +171,9 @@ export default function Product() {
                                                     <td>{p.description}</td>
                                                     <td>
                                                         {
-                                                            p.brands?.map(b => {
-                                                                return <span key={b.id}>{b.name}<br /></span>
+                                                            p?.brands?.map(b => {
+
+                                                                return <span key={b.id}>{b?.name}<br /></span>;
                                                             })
                                                         }
                                                     </td>
@@ -173,6 +196,6 @@ export default function Product() {
                     </Container>
                 </Col>
             </Row>
-        </Container>
+        </Container >
     );
 }
